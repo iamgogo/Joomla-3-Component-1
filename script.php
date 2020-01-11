@@ -33,21 +33,27 @@ JHTML::_('behavior.modal');
 class com_sermondistributorInstallerScript
 {
 	/**
-	 * method to install the component
+	 * Constructor
 	 *
-	 * @return void
+	 * @param   JAdapterInstance  $parent  The object responsible for running this script
 	 */
-	function install($parent)
-	{
-
-	}
+	public function __construct(JAdapterInstance $parent) {}
 
 	/**
-	 * method to uninstall the component
+	 * Called on installation
 	 *
-	 * @return void
+	 * @param   JAdapterInstance  $parent  The object responsible for running this script
+	 *
+	 * @return  boolean  True on success
 	 */
-	function uninstall($parent)
+	public function install(JAdapterInstance $parent) {}
+
+	/**
+	 * Called on uninstallation
+	 *
+	 * @param   JAdapterInstance  $parent  The object responsible for running this script
+	 */
+	public function uninstall(JAdapterInstance $parent)
 	{
 		// Get Application object
 		$app = JFactory::getApplication();
@@ -762,6 +768,206 @@ class com_sermondistributorInstallerScript
 			$app->enqueueMessage(JText::_('All related items was removed from the <b>#__assets</b> table'));
 		}
 
+
+		// Set db if not set already.
+		if (!isset($db))
+		{
+			$db = JFactory::getDbo();
+		}
+		// Set app if not set already.
+		if (!isset($app))
+		{
+			$app = JFactory::getApplication();
+		}
+		// Remove Sermondistributor from the action_logs_extensions table
+		$sermondistributor_action_logs_extensions = array( $db->quoteName('extension') . ' = ' . $db->quote('com_sermondistributor') );
+		// Create a new query object.
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__action_logs_extensions'));
+		$query->where($sermondistributor_action_logs_extensions);
+		$db->setQuery($query);
+		// Execute the query to remove Sermondistributor
+		$sermondistributor_removed_done = $db->execute();
+		if ($sermondistributor_removed_done)
+		{
+			// If successfully remove Sermondistributor add queued success message.
+			$app->enqueueMessage(JText::_('The com_sermondistributor extension was removed from the <b>#__action_logs_extensions</b> table'));
+		}
+
+		// Set db if not set already.
+		if (!isset($db))
+		{
+			$db = JFactory::getDbo();
+		}
+		// Set app if not set already.
+		if (!isset($app))
+		{
+			$app = JFactory::getApplication();
+		}
+		// Remove Sermondistributor Preacher from the action_log_config table
+		$preacher_action_log_config = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.preacher') );
+		// Create a new query object.
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__action_log_config'));
+		$query->where($preacher_action_log_config);
+		$db->setQuery($query);
+		// Execute the query to remove com_sermondistributor.preacher
+		$preacher_action_log_config_done = $db->execute();
+		if ($preacher_action_log_config_done)
+		{
+			// If successfully removed Sermondistributor Preacher add queued success message.
+			$app->enqueueMessage(JText::_('The com_sermondistributor.preacher type alias was removed from the <b>#__action_log_config</b> table'));
+		}
+
+		// Set db if not set already.
+		if (!isset($db))
+		{
+			$db = JFactory::getDbo();
+		}
+		// Set app if not set already.
+		if (!isset($app))
+		{
+			$app = JFactory::getApplication();
+		}
+		// Remove Sermondistributor Sermon from the action_log_config table
+		$sermon_action_log_config = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.sermon') );
+		// Create a new query object.
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__action_log_config'));
+		$query->where($sermon_action_log_config);
+		$db->setQuery($query);
+		// Execute the query to remove com_sermondistributor.sermon
+		$sermon_action_log_config_done = $db->execute();
+		if ($sermon_action_log_config_done)
+		{
+			// If successfully removed Sermondistributor Sermon add queued success message.
+			$app->enqueueMessage(JText::_('The com_sermondistributor.sermon type alias was removed from the <b>#__action_log_config</b> table'));
+		}
+
+		// Set db if not set already.
+		if (!isset($db))
+		{
+			$db = JFactory::getDbo();
+		}
+		// Set app if not set already.
+		if (!isset($app))
+		{
+			$app = JFactory::getApplication();
+		}
+		// Remove Sermondistributor Series from the action_log_config table
+		$series_action_log_config = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.series') );
+		// Create a new query object.
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__action_log_config'));
+		$query->where($series_action_log_config);
+		$db->setQuery($query);
+		// Execute the query to remove com_sermondistributor.series
+		$series_action_log_config_done = $db->execute();
+		if ($series_action_log_config_done)
+		{
+			// If successfully removed Sermondistributor Series add queued success message.
+			$app->enqueueMessage(JText::_('The com_sermondistributor.series type alias was removed from the <b>#__action_log_config</b> table'));
+		}
+
+		// Set db if not set already.
+		if (!isset($db))
+		{
+			$db = JFactory::getDbo();
+		}
+		// Set app if not set already.
+		if (!isset($app))
+		{
+			$app = JFactory::getApplication();
+		}
+		// Remove Sermondistributor Statistic from the action_log_config table
+		$statistic_action_log_config = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.statistic') );
+		// Create a new query object.
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__action_log_config'));
+		$query->where($statistic_action_log_config);
+		$db->setQuery($query);
+		// Execute the query to remove com_sermondistributor.statistic
+		$statistic_action_log_config_done = $db->execute();
+		if ($statistic_action_log_config_done)
+		{
+			// If successfully removed Sermondistributor Statistic add queued success message.
+			$app->enqueueMessage(JText::_('The com_sermondistributor.statistic type alias was removed from the <b>#__action_log_config</b> table'));
+		}
+
+		// Set db if not set already.
+		if (!isset($db))
+		{
+			$db = JFactory::getDbo();
+		}
+		// Set app if not set already.
+		if (!isset($app))
+		{
+			$app = JFactory::getApplication();
+		}
+		// Remove Sermondistributor External_source from the action_log_config table
+		$external_source_action_log_config = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.external_source') );
+		// Create a new query object.
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__action_log_config'));
+		$query->where($external_source_action_log_config);
+		$db->setQuery($query);
+		// Execute the query to remove com_sermondistributor.external_source
+		$external_source_action_log_config_done = $db->execute();
+		if ($external_source_action_log_config_done)
+		{
+			// If successfully removed Sermondistributor External_source add queued success message.
+			$app->enqueueMessage(JText::_('The com_sermondistributor.external_source type alias was removed from the <b>#__action_log_config</b> table'));
+		}
+
+		// Set db if not set already.
+		if (!isset($db))
+		{
+			$db = JFactory::getDbo();
+		}
+		// Set app if not set already.
+		if (!isset($app))
+		{
+			$app = JFactory::getApplication();
+		}
+		// Remove Sermondistributor Local_listing from the action_log_config table
+		$local_listing_action_log_config = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.local_listing') );
+		// Create a new query object.
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__action_log_config'));
+		$query->where($local_listing_action_log_config);
+		$db->setQuery($query);
+		// Execute the query to remove com_sermondistributor.local_listing
+		$local_listing_action_log_config_done = $db->execute();
+		if ($local_listing_action_log_config_done)
+		{
+			// If successfully removed Sermondistributor Local_listing add queued success message.
+			$app->enqueueMessage(JText::_('The com_sermondistributor.local_listing type alias was removed from the <b>#__action_log_config</b> table'));
+		}
+
+		// Set db if not set already.
+		if (!isset($db))
+		{
+			$db = JFactory::getDbo();
+		}
+		// Set app if not set already.
+		if (!isset($app))
+		{
+			$app = JFactory::getApplication();
+		}
+		// Remove Sermondistributor Help_document from the action_log_config table
+		$help_document_action_log_config = array( $db->quoteName('type_alias') . ' = '. $db->quote('com_sermondistributor.help_document') );
+		// Create a new query object.
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__action_log_config'));
+		$query->where($help_document_action_log_config);
+		$db->setQuery($query);
+		// Execute the query to remove com_sermondistributor.help_document
+		$help_document_action_log_config_done = $db->execute();
+		if ($help_document_action_log_config_done)
+		{
+			// If successfully removed Sermondistributor Help_document add queued success message.
+			$app->enqueueMessage(JText::_('The com_sermondistributor.help_document type alias was removed from the <b>#__action_log_config</b> table'));
+		}
 		// little notice as after service, in case of bad experience with component.
 		echo '<h2>Did something go wrong? Are you disappointed?</h2>
 		<p>Please let me know at <a href="mailto:joomla@vdm.io">joomla@vdm.io</a>.
@@ -771,38 +977,40 @@ class com_sermondistributorInstallerScript
 	}
 
 	/**
-	 * method to update the component
+	 * Called on update
 	 *
-	 * @return void
+	 * @param   JAdapterInstance  $parent  The object responsible for running this script
+	 *
+	 * @return  boolean  True on success
 	 */
-	function update($parent)
-	{
-		
-	}
+	public function update(JAdapterInstance $parent){}
 
 	/**
-	 * method to run before an install/update/uninstall method
+	 * Called before any type of action
 	 *
-	 * @return void
+	 * @param   string  $type  Which action is happening (install|uninstall|discover_install|update)
+	 * @param   JAdapterInstance  $parent  The object responsible for running this script
+	 *
+	 * @return  boolean  True on success
 	 */
-	function preflight($type, $parent)
+	public function preflight($type, JAdapterInstance $parent)
 	{
 		// get application
 		$app = JFactory::getApplication();
-		// is redundant ...hmmm
-		if ($type == 'uninstall')
+		// is redundant or so it seems ...hmmm let me know if it works again
+		if ($type === 'uninstall')
 		{
 			return true;
 		}
 		// the default for both install and update
 		$jversion = new JVersion();
-		if (!$jversion->isCompatible('3.6.0'))
+		if (!$jversion->isCompatible('3.8.0'))
 		{
-			$app->enqueueMessage('Please upgrade to at least Joomla! 3.6.0 before continuing!', 'error');
+			$app->enqueueMessage('Please upgrade to at least Joomla! 3.8.0 before continuing!', 'error');
 			return false;
 		}
 		// do any updates needed
-		if ($type == 'update')
+		if ($type === 'update')
 		{
 		// load the helper class
 		JLoader::register('SermondistributorHelper', JPATH_ADMINISTRATOR . '/components/com_sermondistributor/helpers/sermondistributor.php');
@@ -899,22 +1107,26 @@ class com_sermondistributorInstallerScript
 		}
 		}
 		// do any install needed
-		if ($type == 'install')
+		if ($type === 'install')
 		{
 		}
+		return true;
 	}
 
 	/**
-	 * method to run after an install/update/uninstall method
+	 * Called after any type of action
 	 *
-	 * @return void
+	 * @param   string  $type  Which action is happening (install|uninstall|discover_install|update)
+	 * @param   JAdapterInstance  $parent  The object responsible for running this script
+	 *
+	 * @return  boolean  True on success
 	 */
-	function postflight($type, $parent)
+	public function postflight($type, JAdapterInstance $parent)
 	{
 		// get application
 		$app = JFactory::getApplication();
 		// set the default component settings
-		if ($type == 'install')
+		if ($type === 'install')
 		{
 
 			// Get The Database object
@@ -1048,9 +1260,140 @@ class com_sermondistributorInstallerScript
 			echo '<a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
 				</a>';
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the sermondistributor action logs extensions object.
+			$sermondistributor_action_logs_extensions = new stdClass();
+			$sermondistributor_action_logs_extensions->extension = 'com_sermondistributor';
+
+			// Set the object into the action logs extensions table.
+			$sermondistributor_action_logs_extensions_Inserted = $db->insertObject('#__action_logs_extensions', $sermondistributor_action_logs_extensions);
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the preacher action log config object.
+			$preacher_action_log_config = new stdClass();
+			$preacher_action_log_config->type_title = 'PREACHER';
+			$preacher_action_log_config->type_alias = 'com_sermondistributor.preacher';
+			$preacher_action_log_config->id_holder = 'id';
+			$preacher_action_log_config->title_holder = 'name';
+			$preacher_action_log_config->table_name = '#__sermondistributor_preacher';
+			$preacher_action_log_config->text_prefix = 'COM_SERMONDISTRIBUTOR';
+
+			// Set the object into the action log config table.
+			$preacher_Inserted = $db->insertObject('#__action_log_config', $preacher_action_log_config);
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the sermon action log config object.
+			$sermon_action_log_config = new stdClass();
+			$sermon_action_log_config->type_title = 'SERMON';
+			$sermon_action_log_config->type_alias = 'com_sermondistributor.sermon';
+			$sermon_action_log_config->id_holder = 'id';
+			$sermon_action_log_config->title_holder = 'name';
+			$sermon_action_log_config->table_name = '#__sermondistributor_sermon';
+			$sermon_action_log_config->text_prefix = 'COM_SERMONDISTRIBUTOR';
+
+			// Set the object into the action log config table.
+			$sermon_Inserted = $db->insertObject('#__action_log_config', $sermon_action_log_config);
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the series action log config object.
+			$series_action_log_config = new stdClass();
+			$series_action_log_config->type_title = 'SERIES';
+			$series_action_log_config->type_alias = 'com_sermondistributor.series';
+			$series_action_log_config->id_holder = 'id';
+			$series_action_log_config->title_holder = 'name';
+			$series_action_log_config->table_name = '#__sermondistributor_series';
+			$series_action_log_config->text_prefix = 'COM_SERMONDISTRIBUTOR';
+
+			// Set the object into the action log config table.
+			$series_Inserted = $db->insertObject('#__action_log_config', $series_action_log_config);
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the statistic action log config object.
+			$statistic_action_log_config = new stdClass();
+			$statistic_action_log_config->type_title = 'STATISTIC';
+			$statistic_action_log_config->type_alias = 'com_sermondistributor.statistic';
+			$statistic_action_log_config->id_holder = 'id';
+			$statistic_action_log_config->title_holder = 'filename';
+			$statistic_action_log_config->table_name = '#__sermondistributor_statistic';
+			$statistic_action_log_config->text_prefix = 'COM_SERMONDISTRIBUTOR';
+
+			// Set the object into the action log config table.
+			$statistic_Inserted = $db->insertObject('#__action_log_config', $statistic_action_log_config);
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the external_source action log config object.
+			$external_source_action_log_config = new stdClass();
+			$external_source_action_log_config->type_title = 'EXTERNAL_SOURCE';
+			$external_source_action_log_config->type_alias = 'com_sermondistributor.external_source';
+			$external_source_action_log_config->id_holder = 'id';
+			$external_source_action_log_config->title_holder = 'description';
+			$external_source_action_log_config->table_name = '#__sermondistributor_external_source';
+			$external_source_action_log_config->text_prefix = 'COM_SERMONDISTRIBUTOR';
+
+			// Set the object into the action log config table.
+			$external_source_Inserted = $db->insertObject('#__action_log_config', $external_source_action_log_config);
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the local_listing action log config object.
+			$local_listing_action_log_config = new stdClass();
+			$local_listing_action_log_config->type_title = 'LOCAL_LISTING';
+			$local_listing_action_log_config->type_alias = 'com_sermondistributor.local_listing';
+			$local_listing_action_log_config->id_holder = 'id';
+			$local_listing_action_log_config->title_holder = 'name';
+			$local_listing_action_log_config->table_name = '#__sermondistributor_local_listing';
+			$local_listing_action_log_config->text_prefix = 'COM_SERMONDISTRIBUTOR';
+
+			// Set the object into the action log config table.
+			$local_listing_Inserted = $db->insertObject('#__action_log_config', $local_listing_action_log_config);
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the help_document action log config object.
+			$help_document_action_log_config = new stdClass();
+			$help_document_action_log_config->type_title = 'HELP_DOCUMENT';
+			$help_document_action_log_config->type_alias = 'com_sermondistributor.help_document';
+			$help_document_action_log_config->id_holder = 'id';
+			$help_document_action_log_config->title_holder = 'title';
+			$help_document_action_log_config->table_name = '#__sermondistributor_help_document';
+			$help_document_action_log_config->text_prefix = 'COM_SERMONDISTRIBUTOR';
+
+			// Set the object into the action log config table.
+			$help_document_Inserted = $db->insertObject('#__action_log_config', $help_document_action_log_config);
 		}
 		// do any updates needed
-		if ($type == 'update')
+		if ($type === 'update')
 		{
 
 			// Get The Database object
@@ -1380,6 +1723,268 @@ class com_sermondistributorInstallerScript
 				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
 				</a>
 				<h3>Upgrade to Version 2.0.2 Was Successful! Let us know if anything is not working as expected.</h3>';
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the sermondistributor action logs extensions object.
+			$sermondistributor_action_logs_extensions = new stdClass();
+			$sermondistributor_action_logs_extensions->extension = 'com_sermondistributor';
+
+			// Check if sermondistributor action log extension is already in action logs extensions DB.
+			$query = $db->getQuery(true);
+			$query->select($db->quoteName(array('id')));
+			$query->from($db->quoteName('#__action_logs_extensions'));
+			$query->where($db->quoteName('extension') . ' LIKE '. $db->quote($sermondistributor_action_logs_extensions->extension));
+			$db->setQuery($query);
+			$db->execute();
+
+			// Set the object into the action logs extensions table if not found.
+			if (!$db->getNumRows())
+			{
+				$sermondistributor_action_logs_extensions_Inserted = $db->insertObject('#__action_logs_extensions', $sermondistributor_action_logs_extensions);
+			}
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the preacher action log config object.
+			$preacher_action_log_config = new stdClass();
+			$preacher_action_log_config->id = null;
+			$preacher_action_log_config->type_title = 'PREACHER';
+			$preacher_action_log_config->type_alias = 'com_sermondistributor.preacher';
+			$preacher_action_log_config->id_holder = 'id';
+			$preacher_action_log_config->title_holder = 'name';
+			$preacher_action_log_config->table_name = '#__sermondistributor_preacher';
+			$preacher_action_log_config->text_prefix = 'COM_SERMONDISTRIBUTOR';
+
+			// Check if preacher action log config is already in action_log_config DB.
+			$query = $db->getQuery(true);
+			$query->select($db->quoteName(array('id')));
+			$query->from($db->quoteName('#__action_log_config'));
+			$query->where($db->quoteName('type_alias') . ' LIKE '. $db->quote($preacher_action_log_config->type_alias));
+			$db->setQuery($query);
+			$db->execute();
+
+			// Set the object into the content types table.
+			if ($db->getNumRows())
+			{
+				$preacher_action_log_config->id = $db->loadResult();
+				$preacher_action_log_config_Updated = $db->updateObject('#__action_log_config', $preacher_action_log_config, 'id');
+			}
+			else
+			{
+				$preacher_action_log_config_Inserted = $db->insertObject('#__action_log_config', $preacher_action_log_config);
+			}
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the sermon action log config object.
+			$sermon_action_log_config = new stdClass();
+			$sermon_action_log_config->id = null;
+			$sermon_action_log_config->type_title = 'SERMON';
+			$sermon_action_log_config->type_alias = 'com_sermondistributor.sermon';
+			$sermon_action_log_config->id_holder = 'id';
+			$sermon_action_log_config->title_holder = 'name';
+			$sermon_action_log_config->table_name = '#__sermondistributor_sermon';
+			$sermon_action_log_config->text_prefix = 'COM_SERMONDISTRIBUTOR';
+
+			// Check if sermon action log config is already in action_log_config DB.
+			$query = $db->getQuery(true);
+			$query->select($db->quoteName(array('id')));
+			$query->from($db->quoteName('#__action_log_config'));
+			$query->where($db->quoteName('type_alias') . ' LIKE '. $db->quote($sermon_action_log_config->type_alias));
+			$db->setQuery($query);
+			$db->execute();
+
+			// Set the object into the content types table.
+			if ($db->getNumRows())
+			{
+				$sermon_action_log_config->id = $db->loadResult();
+				$sermon_action_log_config_Updated = $db->updateObject('#__action_log_config', $sermon_action_log_config, 'id');
+			}
+			else
+			{
+				$sermon_action_log_config_Inserted = $db->insertObject('#__action_log_config', $sermon_action_log_config);
+			}
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the series action log config object.
+			$series_action_log_config = new stdClass();
+			$series_action_log_config->id = null;
+			$series_action_log_config->type_title = 'SERIES';
+			$series_action_log_config->type_alias = 'com_sermondistributor.series';
+			$series_action_log_config->id_holder = 'id';
+			$series_action_log_config->title_holder = 'name';
+			$series_action_log_config->table_name = '#__sermondistributor_series';
+			$series_action_log_config->text_prefix = 'COM_SERMONDISTRIBUTOR';
+
+			// Check if series action log config is already in action_log_config DB.
+			$query = $db->getQuery(true);
+			$query->select($db->quoteName(array('id')));
+			$query->from($db->quoteName('#__action_log_config'));
+			$query->where($db->quoteName('type_alias') . ' LIKE '. $db->quote($series_action_log_config->type_alias));
+			$db->setQuery($query);
+			$db->execute();
+
+			// Set the object into the content types table.
+			if ($db->getNumRows())
+			{
+				$series_action_log_config->id = $db->loadResult();
+				$series_action_log_config_Updated = $db->updateObject('#__action_log_config', $series_action_log_config, 'id');
+			}
+			else
+			{
+				$series_action_log_config_Inserted = $db->insertObject('#__action_log_config', $series_action_log_config);
+			}
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the statistic action log config object.
+			$statistic_action_log_config = new stdClass();
+			$statistic_action_log_config->id = null;
+			$statistic_action_log_config->type_title = 'STATISTIC';
+			$statistic_action_log_config->type_alias = 'com_sermondistributor.statistic';
+			$statistic_action_log_config->id_holder = 'id';
+			$statistic_action_log_config->title_holder = 'filename';
+			$statistic_action_log_config->table_name = '#__sermondistributor_statistic';
+			$statistic_action_log_config->text_prefix = 'COM_SERMONDISTRIBUTOR';
+
+			// Check if statistic action log config is already in action_log_config DB.
+			$query = $db->getQuery(true);
+			$query->select($db->quoteName(array('id')));
+			$query->from($db->quoteName('#__action_log_config'));
+			$query->where($db->quoteName('type_alias') . ' LIKE '. $db->quote($statistic_action_log_config->type_alias));
+			$db->setQuery($query);
+			$db->execute();
+
+			// Set the object into the content types table.
+			if ($db->getNumRows())
+			{
+				$statistic_action_log_config->id = $db->loadResult();
+				$statistic_action_log_config_Updated = $db->updateObject('#__action_log_config', $statistic_action_log_config, 'id');
+			}
+			else
+			{
+				$statistic_action_log_config_Inserted = $db->insertObject('#__action_log_config', $statistic_action_log_config);
+			}
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the external_source action log config object.
+			$external_source_action_log_config = new stdClass();
+			$external_source_action_log_config->id = null;
+			$external_source_action_log_config->type_title = 'EXTERNAL_SOURCE';
+			$external_source_action_log_config->type_alias = 'com_sermondistributor.external_source';
+			$external_source_action_log_config->id_holder = 'id';
+			$external_source_action_log_config->title_holder = 'description';
+			$external_source_action_log_config->table_name = '#__sermondistributor_external_source';
+			$external_source_action_log_config->text_prefix = 'COM_SERMONDISTRIBUTOR';
+
+			// Check if external_source action log config is already in action_log_config DB.
+			$query = $db->getQuery(true);
+			$query->select($db->quoteName(array('id')));
+			$query->from($db->quoteName('#__action_log_config'));
+			$query->where($db->quoteName('type_alias') . ' LIKE '. $db->quote($external_source_action_log_config->type_alias));
+			$db->setQuery($query);
+			$db->execute();
+
+			// Set the object into the content types table.
+			if ($db->getNumRows())
+			{
+				$external_source_action_log_config->id = $db->loadResult();
+				$external_source_action_log_config_Updated = $db->updateObject('#__action_log_config', $external_source_action_log_config, 'id');
+			}
+			else
+			{
+				$external_source_action_log_config_Inserted = $db->insertObject('#__action_log_config', $external_source_action_log_config);
+			}
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the local_listing action log config object.
+			$local_listing_action_log_config = new stdClass();
+			$local_listing_action_log_config->id = null;
+			$local_listing_action_log_config->type_title = 'LOCAL_LISTING';
+			$local_listing_action_log_config->type_alias = 'com_sermondistributor.local_listing';
+			$local_listing_action_log_config->id_holder = 'id';
+			$local_listing_action_log_config->title_holder = 'name';
+			$local_listing_action_log_config->table_name = '#__sermondistributor_local_listing';
+			$local_listing_action_log_config->text_prefix = 'COM_SERMONDISTRIBUTOR';
+
+			// Check if local_listing action log config is already in action_log_config DB.
+			$query = $db->getQuery(true);
+			$query->select($db->quoteName(array('id')));
+			$query->from($db->quoteName('#__action_log_config'));
+			$query->where($db->quoteName('type_alias') . ' LIKE '. $db->quote($local_listing_action_log_config->type_alias));
+			$db->setQuery($query);
+			$db->execute();
+
+			// Set the object into the content types table.
+			if ($db->getNumRows())
+			{
+				$local_listing_action_log_config->id = $db->loadResult();
+				$local_listing_action_log_config_Updated = $db->updateObject('#__action_log_config', $local_listing_action_log_config, 'id');
+			}
+			else
+			{
+				$local_listing_action_log_config_Inserted = $db->insertObject('#__action_log_config', $local_listing_action_log_config);
+			}
+
+			// Set db if not set already.
+			if (!isset($db))
+			{
+				$db = JFactory::getDbo();
+			}
+			// Create the help_document action log config object.
+			$help_document_action_log_config = new stdClass();
+			$help_document_action_log_config->id = null;
+			$help_document_action_log_config->type_title = 'HELP_DOCUMENT';
+			$help_document_action_log_config->type_alias = 'com_sermondistributor.help_document';
+			$help_document_action_log_config->id_holder = 'id';
+			$help_document_action_log_config->title_holder = 'title';
+			$help_document_action_log_config->table_name = '#__sermondistributor_help_document';
+			$help_document_action_log_config->text_prefix = 'COM_SERMONDISTRIBUTOR';
+
+			// Check if help_document action log config is already in action_log_config DB.
+			$query = $db->getQuery(true);
+			$query->select($db->quoteName(array('id')));
+			$query->from($db->quoteName('#__action_log_config'));
+			$query->where($db->quoteName('type_alias') . ' LIKE '. $db->quote($help_document_action_log_config->type_alias));
+			$db->setQuery($query);
+			$db->execute();
+
+			// Set the object into the content types table.
+			if ($db->getNumRows())
+			{
+				$help_document_action_log_config->id = $db->loadResult();
+				$help_document_action_log_config_Updated = $db->updateObject('#__action_log_config', $help_document_action_log_config, 'id');
+			}
+			else
+			{
+				$help_document_action_log_config_Inserted = $db->insertObject('#__action_log_config', $help_document_action_log_config);
+			}
 		}
+		return true;
 	}
 }

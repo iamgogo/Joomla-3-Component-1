@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.2" method="upgrade">
 	<name>COM_SERMONDISTRIBUTOR</name>
-	<creationDate>6th September, 2018</creationDate>
+	<creationDate>5th January, 2020</creationDate>
 	<author>Llewellyn van der Merwe</author>
 	<authorEmail>joomla@vdm.io</authorEmail>
 	<authorUrl>https://www.vdm.io/</authorUrl>
@@ -56,6 +56,7 @@
 		<filename>index.html</filename>
 		<filename>router.php</filename>
 		<filename>sermondistributor.php</filename>
+		<filename>router.php</filename>
 		<folder>assets</folder>
 		<folder>helpers</folder>
 		<folder>controllers</folder>
@@ -80,7 +81,7 @@
 		<files folder="admin">
 			<filename>access.xml</filename>
 			<filename>config.xml</filename>
-			<filename>controller.php</filename>###WHMCS_ENCRYPT_FILE###
+			<filename>controller.php</filename>
 			<filename>index.html</filename>
 			<filename>sermondistributor.php</filename>
 			<filename>README.txt</filename>

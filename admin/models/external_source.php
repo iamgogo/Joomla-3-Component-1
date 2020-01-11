@@ -31,13 +31,54 @@ use Joomla\Registry\Registry;
  * Sermondistributor External_source Model
  */
 class SermondistributorModelExternal_source extends JModelAdmin
-{    
+{
+	/**
+	 * The tab layout fields array.
+	 *
+	 * @var      array
+	 */
+	protected $tabLayoutFields = array(
+		'details' => array(
+			'left' => array(
+				'oauthtoken',
+				'generated_access_token_note',
+				'permissiontype',
+				'app_limitation_note',
+				'dropboxoptions'
+			),
+			'right' => array(
+				'update_method',
+				'update_timer',
+				'filetypes'
+			),
+			'fullwidth' => array(
+				'sharedurl',
+				'folder',
+				'apicronjob_note'
+			),
+			'above' => array(
+				'description',
+				'externalsources'
+			),
+			'under' => array(
+				'not_required'
+			)
+		),
+		'build_option' => array(
+			'fullwidth' => array(
+				'build',
+				'note_manual_externalsource',
+				'note_auto_externalsource'
+			)
+		)
+	);
+
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since   1.6
 	 */
 	protected $text_prefix = 'COM_SERMONDISTRIBUTOR';
-    
+
 	/**
 	 * The type alias for this content type.
 	 *
@@ -193,7 +234,7 @@ class SermondistributorModelExternal_source extends JModelAdmin
 		}
 
 		return $item;
-	} 
+	}
 
 	/**
 	 * Method to get the record form.
@@ -210,8 +251,23 @@ class SermondistributorModelExternal_source extends JModelAdmin
 	{
 		// set load data option
 		$options['load_data'] = $loadData;
+		// check if xpath was set in options
+		$xpath = false;
+		if (isset($options['xpath']))
+		{
+			$xpath = $options['xpath'];
+			unset($options['xpath']);
+		}
+		// check if clear form was set in options
+		$clear = false;
+		if (isset($options['clear']))
+		{
+			$clear = $options['clear'];
+			unset($options['clear']);
+		}
+
 		// Get the form.
-		$form = $this->loadForm('com_sermondistributor.external_source', 'external_source', $options);
+		$form = $this->loadForm('com_sermondistributor.external_source', 'external_source', $options, $clear, $xpath);
 
 		if (empty($form))
 		{
@@ -443,6 +499,8 @@ class SermondistributorModelExternal_source extends JModelAdmin
 		if (empty($data))
 		{
 			$data = $this->getItem();
+			// run the perprocess of the data
+			$this->preprocessData('com_sermondistributor.external_source', $data);
 		}
 
 		return $data;
@@ -482,7 +540,7 @@ class SermondistributorModelExternal_source extends JModelAdmin
 			}
 		}
 		return parent::validate($form, $data, $group);
-	} 
+	}
 
 	/**
 	 * Method to get the unique fields of this table.
@@ -772,7 +830,7 @@ class SermondistributorModelExternal_source extends JModelAdmin
 		$this->cleanCache();
 
 		return $newIds;
-	} 
+	}
 
 	/**
 	 * Batch move items to a new category
@@ -904,7 +962,7 @@ class SermondistributorModelExternal_source extends JModelAdmin
 			$metadata = new JRegistry;
 			$metadata->loadArray($data['metadata']);
 			$data['metadata'] = (string) $metadata;
-		} 
+		}
 
 		// Set the filetypes string to JSON string.
 		if (isset($data['filetypes']))

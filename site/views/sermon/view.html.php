@@ -58,11 +58,12 @@ class SermondistributorViewSermon extends JViewLegacy
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			throw new Exception(implode("\n", $errors), 500);
+			throw new Exception(implode(PHP_EOL, $errors), 500);
 		}
 
 		parent::display($tpl);
 	}
+
 
 	 /**
 	 * Increment the hit counter for the sermon.
@@ -71,7 +72,7 @@ class SermondistributorViewSermon extends JViewLegacy
 	 *
 	 * @return  boolean  True if successful;
 	 */
-	public function hit($pk = 0)
+	public function hit($pk = 0, $category = false)
 	{
 		if ($pk)
 		{
@@ -80,21 +81,29 @@ class SermondistributorViewSermon extends JViewLegacy
 
 			// Fields to update.
 			$fields = array(
-			    $db->quoteName('hits') . ' = '.$db->quoteName('hits').' + 1'
+			    $db->quoteName('hits') . ' = ' . $db->quoteName('hits') . ' + 1'
 			);
 
 			// Conditions for which records should be updated.
 			$conditions = array(
 			    $db->quoteName('id') . ' = ' . $pk
 			);
-
-			$query->update($db->quoteName('#__sermondistributor_sermon'))->set($fields)->where($conditions);
+			// set for category
+			if ($category)
+			{
+				$query->update($db->quoteName('#__categories'))->set($fields)->where($conditions);
+			}
+			else
+			{
+				$query->update($db->quoteName('#__sermondistributor_sermon'))->set($fields)->where($conditions);
+			}
 
 			$db->setQuery($query);
 			return $db->execute();
 		}
 		return false;
 	}
+
 
 	/**
 	 * Prepares the document
@@ -107,7 +116,7 @@ class SermondistributorViewSermon extends JViewLegacy
 		// Load the header checker class.
 		require_once( JPATH_COMPONENT_SITE.'/helpers/headercheck.php' );
 		// Initialize the header checker.
-		$HeaderCheck = new sermondistributorHeaderCheck; 
+		$HeaderCheck = new sermondistributorHeaderCheck;
 
 		// Load uikit options.
 		$uikit = $this->params->get('uikit_load');
@@ -196,8 +205,9 @@ class SermondistributorViewSermon extends JViewLegacy
 			if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
 				$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit-v3/js/uikit'.$size.'.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
+				$this->document->addScript(JURI::root(true) .'/media/com_sermondistributor/uikit-v3/js/uikit-icons'.$size.'.js', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
 			}
-		}   
+		}
 		// load the meta description
 		if (isset($this->item->metadesc) && $this->item->metadesc)
 		{
@@ -241,7 +251,7 @@ class SermondistributorViewSermon extends JViewLegacy
 					$this->document->setMetadata($k, $v);
 				}
 			}
-		} 
+		}
 		// set the player key for the sermon view
 		$this->item->playerKey = (int) $this->params->get('player', 1);
 		if (1 == $this->item->playerKey)
@@ -268,7 +278,7 @@ class SermondistributorViewSermon extends JViewLegacy
 			}
 		} 
 		// add the document default css file
-		$this->document->addStyleSheet(JURI::root(true) .'/components/com_sermondistributor/assets/css/sermon.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css'); 
+		$this->document->addStyleSheet(JURI::root(true) .'/components/com_sermondistributor/assets/css/sermon.css', (SermondistributorHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
 	}
 
 	/**

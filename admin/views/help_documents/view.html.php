@@ -50,6 +50,8 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 		$this->listOrder = $this->escape($this->state->get('list.ordering'));
 		$this->listDirn = $this->escape($this->state->get('list.direction'));
 		$this->saveOrder = $this->listOrder == 'ordering';
+		// set the return here value
+		$this->return_here = urlencode(base64_encode((string) JUri::getInstance()));
 		// get global action permissions
 		$this->canDo = SermondistributorHelper::getActions('help_document');
 		$this->canEdit = $this->canDo->get('help_document.edit');
@@ -129,7 +131,7 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 				// add the button to the page
 				$dhtml = $layout->render(array('title' => $title));
 				$bar->appendButton('Custom', $dhtml, 'batch');
-			} 
+			}
 
 			if ($this->state->get('filter.published') == -2 && ($this->canState && $this->canDelete))
 			{
@@ -144,7 +146,7 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 			{
 				JToolBarHelper::custom('help_documents.exportData', 'download', '', 'COM_SERMONDISTRIBUTOR_EXPORT_DATA', true);
 			}
-		} 
+		}
 
 		if ($this->canDo->get('core.import') && $this->canDo->get('help_document.import'))
 		{
@@ -195,11 +197,19 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 				'batch[access]',
 				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text')
 			);
-		} 
+		}
 
 		// Set Type Selection
 		$this->typeOptions = $this->getTheTypeSelections();
-		if ($this->typeOptions)
+		// We do some sanitation for Type filter
+		if (SermondistributorHelper::checkArray($this->typeOptions) &&
+			isset($this->typeOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->typeOptions[0]->value))
+		{
+			unset($this->typeOptions[0]);
+		}
+		// Only load Type filter if it has values
+		if (SermondistributorHelper::checkArray($this->typeOptions))
 		{
 			// Type Filter
 			JHtmlSidebar::addFilter(
@@ -221,7 +231,15 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 
 		// Set Location Selection
 		$this->locationOptions = $this->getTheLocationSelections();
-		if ($this->locationOptions)
+		// We do some sanitation for Location filter
+		if (SermondistributorHelper::checkArray($this->locationOptions) &&
+			isset($this->locationOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->locationOptions[0]->value))
+		{
+			unset($this->locationOptions[0]);
+		}
+		// Only load Location filter if it has values
+		if (SermondistributorHelper::checkArray($this->locationOptions))
 		{
 			// Location Filter
 			JHtmlSidebar::addFilter(
@@ -242,8 +260,16 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 		}
 
 		// Set Admin View Selection
-		$this->admin_viewOptions = JFormHelper::loadFieldType('Adminviewfolderlist')->getOptions();
-		if ($this->admin_viewOptions)
+		$this->admin_viewOptions = JFormHelper::loadFieldType('Adminviewfolderlist')->options;
+		// We do some sanitation for Admin View filter
+		if (SermondistributorHelper::checkArray($this->admin_viewOptions) &&
+			isset($this->admin_viewOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->admin_viewOptions[0]->value))
+		{
+			unset($this->admin_viewOptions[0]);
+		}
+		// Only load Admin View filter if it has values
+		if (SermondistributorHelper::checkArray($this->admin_viewOptions))
 		{
 			// Admin View Filter
 			JHtmlSidebar::addFilter(
@@ -264,8 +290,16 @@ class SermondistributorViewHelp_documents extends JViewLegacy
 		}
 
 		// Set Site View Selection
-		$this->site_viewOptions = JFormHelper::loadFieldType('Siteviewfolderlist')->getOptions();
-		if ($this->site_viewOptions)
+		$this->site_viewOptions = JFormHelper::loadFieldType('Siteviewfolderlist')->options;
+		// We do some sanitation for Site View filter
+		if (SermondistributorHelper::checkArray($this->site_viewOptions) &&
+			isset($this->site_viewOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->site_viewOptions[0]->value))
+		{
+			unset($this->site_viewOptions[0]);
+		}
+		// Only load Site View filter if it has values
+		if (SermondistributorHelper::checkArray($this->site_viewOptions))
 		{
 			// Site View Filter
 			JHtmlSidebar::addFilter(

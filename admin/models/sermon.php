@@ -31,13 +31,59 @@ use Joomla\Registry\Registry;
  * Sermondistributor Sermon Model
  */
 class SermondistributorModelSermon extends JModelAdmin
-{    
+{
+	/**
+	 * The tab layout fields array.
+	 *
+	 * @var      array
+	 */
+	protected $tabLayoutFields = array(
+		'details' => array(
+			'left' => array(
+				'scripture',
+				'short_description',
+				'icon'
+			),
+			'right' => array(
+				'series',
+				'catid',
+				'tags'
+			),
+			'fullwidth' => array(
+				'description'
+			),
+			'above' => array(
+				'name',
+				'alias',
+				'preacher'
+			),
+			'under' => array(
+				'not_required',
+				'auto_sermons'
+			)
+		),
+		'files' => array(
+			'fullwidth' => array(
+				'link_type',
+				'note_link_directed',
+				'note_link_encrypted',
+				'source',
+				'build',
+				'note_manual_externalsource',
+				'note_auto_externalsource',
+				'manual_files',
+				'local_files',
+				'url'
+			)
+		)
+	);
+
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since   1.6
 	 */
 	protected $text_prefix = 'COM_SERMONDISTRIBUTOR';
-    
+
 	/**
 	 * The type alias for this content type.
 	 *
@@ -189,12 +235,18 @@ class SermondistributorModelSermon extends JModelAdmin
 		{
 			$items = $db->loadObjectList();
 
-			// set values to display correctly.
+			// Set values to display correctly.
 			if (SermondistributorHelper::checkArray($items))
 			{
+				// Get the user object if not set.
+				if (!isset($user) || !SermondistributorHelper::checkObject($user))
+				{
+					$user = JFactory::getUser();
+				}
 				foreach ($items as $nr => &$item)
 				{
-					$access = (JFactory::getUser()->authorise('statistic.access', 'com_sermondistributor.statistic.' . (int) $item->id) && JFactory::getUser()->authorise('statistic.access', 'com_sermondistributor'));
+					// Remove items the user can't access.
+					$access = ($user->authorise('statistic.access', 'com_sermondistributor.statistic.' . (int) $item->id) && $user->authorise('statistic.access', 'com_sermondistributor'));
 					if (!$access)
 					{
 						unset($items[$nr]);
@@ -206,7 +258,7 @@ class SermondistributorModelSermon extends JModelAdmin
 			return $items;
 		}
 		return false;
-	} 
+	}
 
 	/**
 	 * Method to get the record form.
@@ -223,8 +275,23 @@ class SermondistributorModelSermon extends JModelAdmin
 	{
 		// set load data option
 		$options['load_data'] = $loadData;
+		// check if xpath was set in options
+		$xpath = false;
+		if (isset($options['xpath']))
+		{
+			$xpath = $options['xpath'];
+			unset($options['xpath']);
+		}
+		// check if clear form was set in options
+		$clear = false;
+		if (isset($options['clear']))
+		{
+			$clear = $options['clear'];
+			unset($options['clear']);
+		}
+
 		// Get the form.
-		$form = $this->loadForm('com_sermondistributor.sermon', 'sermon', $options);
+		$form = $this->loadForm('com_sermondistributor.sermon', 'sermon', $options, $clear, $xpath);
 
 		if (empty($form))
 		{
@@ -456,6 +523,8 @@ class SermondistributorModelSermon extends JModelAdmin
 		if (empty($data))
 		{
 			$data = $this->getItem();
+			// run the perprocess of the data
+			$this->preprocessData('com_sermondistributor.sermon', $data);
 		}
 
 		return $data;
@@ -495,7 +564,7 @@ class SermondistributorModelSermon extends JModelAdmin
 			}
 		}
 		return parent::validate($form, $data, $group);
-	} 
+	}
 
 	/**
 	 * Method to get the unique fields of this table.
@@ -803,7 +872,7 @@ class SermondistributorModelSermon extends JModelAdmin
 		$this->cleanCache();
 
 		return $newIds;
-	} 
+	}
 
 	/**
 	 * Batch move items to a new category
@@ -951,7 +1020,7 @@ class SermondistributorModelSermon extends JModelAdmin
 			$metadata = new JRegistry;
 			$metadata->loadArray($data['metadata']);
 			$data['metadata'] = (string) $metadata;
-		} 
+		}
 
 		// Set the local_files string to JSON string.
 		if (isset($data['local_files']))

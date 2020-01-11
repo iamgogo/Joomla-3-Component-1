@@ -31,13 +31,37 @@ use Joomla\Registry\Registry;
  * Sermondistributor Local_listing Model
  */
 class SermondistributorModelLocal_listing extends JModelAdmin
-{    
+{
+	/**
+	 * The tab layout fields array.
+	 *
+	 * @var      array
+	 */
+	protected $tabLayoutFields = array(
+		'details' => array(
+			'left' => array(
+				'external_source'
+			),
+			'right' => array(
+				'build'
+			),
+			'fullwidth' => array(
+				'key',
+				'url'
+			),
+			'above' => array(
+				'name',
+				'size'
+			)
+		)
+	);
+
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since   1.6
 	 */
 	protected $text_prefix = 'COM_SERMONDISTRIBUTOR';
-    
+
 	/**
 	 * The type alias for this content type.
 	 *
@@ -145,7 +169,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 		}
 
 		return $item;
-	} 
+	}
 
 	/**
 	 * Method to get the record form.
@@ -162,8 +186,23 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 	{
 		// set load data option
 		$options['load_data'] = $loadData;
+		// check if xpath was set in options
+		$xpath = false;
+		if (isset($options['xpath']))
+		{
+			$xpath = $options['xpath'];
+			unset($options['xpath']);
+		}
+		// check if clear form was set in options
+		$clear = false;
+		if (isset($options['clear']))
+		{
+			$clear = $options['clear'];
+			unset($options['clear']);
+		}
+
 		// Get the form.
-		$form = $this->loadForm('com_sermondistributor.local_listing', 'local_listing', $options);
+		$form = $this->loadForm('com_sermondistributor.local_listing', 'local_listing', $options, $clear, $xpath);
 
 		if (empty($form))
 		{
@@ -497,10 +536,12 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 		if (empty($data))
 		{
 			$data = $this->getItem();
+			// run the perprocess of the data
+			$this->preprocessData('com_sermondistributor.local_listing', $data);
 		}
 
 		return $data;
-	} 
+	}
 
 	/**
 	 * Method to get the unique fields of this table.
@@ -790,7 +831,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 		$this->cleanCache();
 
 		return $newIds;
-	} 
+	}
 
 	/**
 	 * Batch move items to a new category
@@ -922,7 +963,7 @@ class SermondistributorModelLocal_listing extends JModelAdmin
 			$metadata = new JRegistry;
 			$metadata->loadArray($data['metadata']);
 			$data['metadata'] = (string) $metadata;
-		} 
+		}
 
 		// Get the basic encryption key.
 		$basickey = SermondistributorHelper::getCryptKey('basic');

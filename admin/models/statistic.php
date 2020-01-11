@@ -31,13 +31,34 @@ use Joomla\Registry\Registry;
  * Sermondistributor Statistic Model
  */
 class SermondistributorModelStatistic extends JModelAdmin
-{    
+{
+	/**
+	 * The tab layout fields array.
+	 *
+	 * @var      array
+	 */
+	protected $tabLayoutFields = array(
+		'details' => array(
+			'left' => array(
+				'preacher',
+				'series'
+			),
+			'right' => array(
+				'counter'
+			),
+			'above' => array(
+				'filename',
+				'sermon'
+			)
+		)
+	);
+
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since   1.6
 	 */
 	protected $text_prefix = 'COM_SERMONDISTRIBUTOR';
-    
+
 	/**
 	 * The type alias for this content type.
 	 *
@@ -102,7 +123,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 		}
 
 		return $item;
-	} 
+	}
 
 	/**
 	 * Method to get the record form.
@@ -119,8 +140,23 @@ class SermondistributorModelStatistic extends JModelAdmin
 	{
 		// set load data option
 		$options['load_data'] = $loadData;
+		// check if xpath was set in options
+		$xpath = false;
+		if (isset($options['xpath']))
+		{
+			$xpath = $options['xpath'];
+			unset($options['xpath']);
+		}
+		// check if clear form was set in options
+		$clear = false;
+		if (isset($options['clear']))
+		{
+			$clear = $options['clear'];
+			unset($options['clear']);
+		}
+
 		// Get the form.
-		$form = $this->loadForm('com_sermondistributor.statistic', 'statistic', $options);
+		$form = $this->loadForm('com_sermondistributor.statistic', 'statistic', $options, $clear, $xpath);
 
 		if (empty($form))
 		{
@@ -352,10 +388,12 @@ class SermondistributorModelStatistic extends JModelAdmin
 		if (empty($data))
 		{
 			$data = $this->getItem();
+			// run the perprocess of the data
+			$this->preprocessData('com_sermondistributor.statistic', $data);
 		}
 
 		return $data;
-	} 
+	}
 
 	/**
 	 * Method to get the unique fields of this table.
@@ -645,7 +683,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 		$this->cleanCache();
 
 		return $newIds;
-	} 
+	}
 
 	/**
 	 * Batch move items to a new category
@@ -777,7 +815,7 @@ class SermondistributorModelStatistic extends JModelAdmin
 			$metadata = new JRegistry;
 			$metadata->loadArray($data['metadata']);
 			$data['metadata'] = (string) $metadata;
-		} 
+		}
         
 		// Set the Params Items to data
 		if (isset($data['params']) && is_array($data['params']))

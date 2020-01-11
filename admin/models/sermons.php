@@ -124,19 +124,25 @@ class SermondistributorModelSermons extends JModelList
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
-	{ 
+	{
 		// check in items
 		$this->checkInNow();
 
 		// load parent items
 		$items = parent::getItems();
 
-		// set values to display correctly.
+		// Set values to display correctly.
 		if (SermondistributorHelper::checkArray($items))
 		{
+			// Get the user object if not set.
+			if (!isset($user) || !SermondistributorHelper::checkObject($user))
+			{
+				$user = JFactory::getUser();
+			}
 			foreach ($items as $nr => &$item)
 			{
-				$access = (JFactory::getUser()->authorise('sermon.access', 'com_sermondistributor.sermon.' . (int) $item->id) && JFactory::getUser()->authorise('sermon.access', 'com_sermondistributor'));
+				// Remove items the user can't access.
+				$access = ($user->authorise('sermon.access', 'com_sermondistributor.sermon.' . (int) $item->id) && $user->authorise('sermon.access', 'com_sermondistributor'));
 				if (!$access)
 				{
 					unset($items[$nr]);
@@ -144,7 +150,7 @@ class SermondistributorModelSermons extends JModelList
 				}
 
 			}
-		} 
+		}
 
 		// set selection value to a translatable value
 		if (SermondistributorHelper::checkArray($items))
@@ -157,7 +163,7 @@ class SermondistributorModelSermons extends JModelList
 				$item->source = $this->selectionTranslation($item->source, 'source');
 			}
 		}
- 
+
         
 		// return items
 		return $items;
@@ -327,17 +333,23 @@ class SermondistributorModelSermons extends JModelList
 	/**
 	 * Method to get list export data.
 	 *
+	 * @param   array  $pks  The ids of the items to get
+	 * @param   JUser  $user  The user making the request
+	 *
 	 * @return mixed  An array of data items on success, false on failure.
 	 */
-	public function getExportData($pks)
+	public function getExportData($pks, $user = null)
 	{
 		// setup the query
 		if (SermondistributorHelper::checkArray($pks))
 		{
-			// Set a value to know this is exporting method.
+			// Set a value to know this is export method. (USE IN CUSTOM CODE TO ALTER OUTCOME)
 			$_export = true;
-			// Get the user object.
-			$user = JFactory::getUser();
+			// Get the user object if not set.
+			if (!isset($user) || !SermondistributorHelper::checkObject($user))
+			{
+				$user = JFactory::getUser();
+			}
 			// Create a new query object.
 			$db = JFactory::getDBO();
 			$query = $db->getQuery(true);
@@ -365,12 +377,13 @@ class SermondistributorModelSermons extends JModelList
 			{
 				$items = $db->loadObjectList();
 
-				// set values to display correctly.
+				// Set values to display correctly.
 				if (SermondistributorHelper::checkArray($items))
 				{
 					foreach ($items as $nr => &$item)
 					{
-						$access = (JFactory::getUser()->authorise('sermon.access', 'com_sermondistributor.sermon.' . (int) $item->id) && JFactory::getUser()->authorise('sermon.access', 'com_sermondistributor'));
+						// Remove items the user can't access.
+						$access = ($user->authorise('sermon.access', 'com_sermondistributor.sermon.' . (int) $item->id) && $user->authorise('sermon.access', 'com_sermondistributor'));
 						if (!$access)
 						{
 							unset($items[$nr]);
@@ -420,7 +433,7 @@ class SermondistributorModelSermons extends JModelList
 			return $headers;
 		}
 		return false;
-	} 
+	}
 	
 	/**
 	 * Method to get a store id based on model configuration state.

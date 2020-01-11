@@ -50,6 +50,8 @@ class SermondistributorViewStatistics extends JViewLegacy
 		$this->listOrder = $this->escape($this->state->get('list.ordering'));
 		$this->listDirn = $this->escape($this->state->get('list.direction'));
 		$this->saveOrder = $this->listOrder == 'ordering';
+		// set the return here value
+		$this->return_here = urlencode(base64_encode((string) JUri::getInstance()));
 		// get global action permissions
 		$this->canDo = SermondistributorHelper::getActions('statistic');
 		$this->canEdit = $this->canDo->get('statistic.edit');
@@ -129,7 +131,7 @@ class SermondistributorViewStatistics extends JViewLegacy
 				// add the button to the page
 				$dhtml = $layout->render(array('title' => $title));
 				$bar->appendButton('Custom', $dhtml, 'batch');
-			} 
+			}
 
 			if ($this->state->get('filter.published') == -2 && ($this->canState && $this->canDelete))
 			{
@@ -144,7 +146,7 @@ class SermondistributorViewStatistics extends JViewLegacy
 			{
 				JToolBarHelper::custom('statistics.exportData', 'download', '', 'COM_SERMONDISTRIBUTOR_EXPORT_DATA', true);
 			}
-		} 
+		}
 
 		if ($this->canDo->get('core.import') && $this->canDo->get('statistic.import'))
 		{
@@ -195,11 +197,19 @@ class SermondistributorViewStatistics extends JViewLegacy
 				'batch[access]',
 				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text')
 			);
-		} 
+		}
 
 		// Set Sermon Name Selection
-		$this->sermonNameOptions = JFormHelper::loadFieldType('Sermon')->getOptions();
-		if ($this->sermonNameOptions)
+		$this->sermonNameOptions = JFormHelper::loadFieldType('Sermon')->options;
+		// We do some sanitation for Sermon Name filter
+		if (SermondistributorHelper::checkArray($this->sermonNameOptions) &&
+			isset($this->sermonNameOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->sermonNameOptions[0]->value))
+		{
+			unset($this->sermonNameOptions[0]);
+		}
+		// Only load Sermon Name filter if it has values
+		if (SermondistributorHelper::checkArray($this->sermonNameOptions))
 		{
 			// Sermon Name Filter
 			JHtmlSidebar::addFilter(
@@ -220,8 +230,16 @@ class SermondistributorViewStatistics extends JViewLegacy
 		}
 
 		// Set Preacher Name Selection
-		$this->preacherNameOptions = JFormHelper::loadFieldType('Preachers')->getOptions();
-		if ($this->preacherNameOptions)
+		$this->preacherNameOptions = JFormHelper::loadFieldType('Preachers')->options;
+		// We do some sanitation for Preacher Name filter
+		if (SermondistributorHelper::checkArray($this->preacherNameOptions) &&
+			isset($this->preacherNameOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->preacherNameOptions[0]->value))
+		{
+			unset($this->preacherNameOptions[0]);
+		}
+		// Only load Preacher Name filter if it has values
+		if (SermondistributorHelper::checkArray($this->preacherNameOptions))
 		{
 			// Preacher Name Filter
 			JHtmlSidebar::addFilter(
@@ -242,8 +260,16 @@ class SermondistributorViewStatistics extends JViewLegacy
 		}
 
 		// Set Series Name Selection
-		$this->seriesNameOptions = JFormHelper::loadFieldType('Series')->getOptions();
-		if ($this->seriesNameOptions)
+		$this->seriesNameOptions = JFormHelper::loadFieldType('Series')->options;
+		// We do some sanitation for Series Name filter
+		if (SermondistributorHelper::checkArray($this->seriesNameOptions) &&
+			isset($this->seriesNameOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->seriesNameOptions[0]->value))
+		{
+			unset($this->seriesNameOptions[0]);
+		}
+		// Only load Series Name filter if it has values
+		if (SermondistributorHelper::checkArray($this->seriesNameOptions))
 		{
 			// Series Name Filter
 			JHtmlSidebar::addFilter(

@@ -50,6 +50,8 @@ class SermondistributorViewExternal_sources extends JViewLegacy
 		$this->listOrder = $this->escape($this->state->get('list.ordering'));
 		$this->listDirn = $this->escape($this->state->get('list.direction'));
 		$this->saveOrder = $this->listOrder == 'ordering';
+		// set the return here value
+		$this->return_here = urlencode(base64_encode((string) JUri::getInstance()));
 		// get global action permissions
 		$this->canDo = SermondistributorHelper::getActions('external_source');
 		$this->canEdit = $this->canDo->get('external_source.edit');
@@ -129,7 +131,7 @@ class SermondistributorViewExternal_sources extends JViewLegacy
 				// add the button to the page
 				$dhtml = $layout->render(array('title' => $title));
 				$bar->appendButton('Custom', $dhtml, 'batch');
-			} 
+			}
 
 			if ($this->state->get('filter.published') == -2 && ($this->canState && $this->canDelete))
 			{
@@ -144,7 +146,7 @@ class SermondistributorViewExternal_sources extends JViewLegacy
 			{
 				JToolBarHelper::custom('external_sources.exportData', 'download', '', 'COM_SERMONDISTRIBUTOR_EXPORT_DATA', true);
 			}
-		} 
+		}
 
 		if ($this->canDo->get('core.import') && $this->canDo->get('external_source.import'))
 		{
@@ -195,11 +197,19 @@ class SermondistributorViewExternal_sources extends JViewLegacy
 				'batch[access]',
 				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text')
 			);
-		} 
+		}
 
 		// Set Externalsources Selection
 		$this->externalsourcesOptions = $this->getTheExternalsourcesSelections();
-		if ($this->externalsourcesOptions)
+		// We do some sanitation for Externalsources filter
+		if (SermondistributorHelper::checkArray($this->externalsourcesOptions) &&
+			isset($this->externalsourcesOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->externalsourcesOptions[0]->value))
+		{
+			unset($this->externalsourcesOptions[0]);
+		}
+		// Only load Externalsources filter if it has values
+		if (SermondistributorHelper::checkArray($this->externalsourcesOptions))
 		{
 			// Externalsources Filter
 			JHtmlSidebar::addFilter(
@@ -221,7 +231,15 @@ class SermondistributorViewExternal_sources extends JViewLegacy
 
 		// Set Update Method Selection
 		$this->update_methodOptions = $this->getTheUpdate_methodSelections();
-		if ($this->update_methodOptions)
+		// We do some sanitation for Update Method filter
+		if (SermondistributorHelper::checkArray($this->update_methodOptions) &&
+			isset($this->update_methodOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->update_methodOptions[0]->value))
+		{
+			unset($this->update_methodOptions[0]);
+		}
+		// Only load Update Method filter if it has values
+		if (SermondistributorHelper::checkArray($this->update_methodOptions))
 		{
 			// Update Method Filter
 			JHtmlSidebar::addFilter(
@@ -243,7 +261,15 @@ class SermondistributorViewExternal_sources extends JViewLegacy
 
 		// Set Build Selection
 		$this->buildOptions = $this->getTheBuildSelections();
-		if ($this->buildOptions)
+		// We do some sanitation for Build filter
+		if (SermondistributorHelper::checkArray($this->buildOptions) &&
+			isset($this->buildOptions[0]->value) &&
+			!SermondistributorHelper::checkString($this->buildOptions[0]->value))
+		{
+			unset($this->buildOptions[0]);
+		}
+		// Only load Build filter if it has values
+		if (SermondistributorHelper::checkArray($this->buildOptions))
 		{
 			// Build Filter
 			JHtmlSidebar::addFilter(
